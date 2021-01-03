@@ -6,7 +6,6 @@ const int screenWidth = 800;
 const int screenHeight = 450;
 
 
-
 class Grid{
     float hLines = 10;
     float vLines = 10;
@@ -52,36 +51,40 @@ public:
 };
 
 
-
-void draw_origin(Vector2 origin,
-                 bool arrows,
-                 float arrowX,
-                 float arrowY,
-                 Color color){
-    
-    DrawCircleV(origin, 4.0f, color);
-    
-    if(arrows){
-        // Construct Lines
-        Vector2 extentX = {origin.x + arrowX, origin.y};
-        DrawLineEx(origin, extentX, 2.0f, color);
-        Vector2 extentY = {origin.x, origin.y - arrowY};
-        DrawLineEx(origin, extentY, 2.0f, color);
+class Origin{
+    Vector2 position;
+public:
+    Vector2 get_position(){return position;}
+    void draw(Vector2 postion,
+              bool arrows,
+              float arrowX,
+              float arrowY,
+              Color color){
         
-        // Construct Arrowheads
-        // X-arrowhead
-        Vector2 revUpArrow = {origin.x + arrowX - 10.0f, origin.y + 5.0f};
-        Vector2 revDownArrow = {origin.x + arrowX - 10.0f, origin.y - 5.0f};
-        DrawLineEx(extentX, revUpArrow, 2.0f, color);
-        DrawLineEx(extentX, revDownArrow, 2.0f, color);
+        DrawCircleV(postion, 4.0f, color);
         
-        // Y-arrowHead
-        Vector2 revLArrow = {origin.x + 5.0f, origin.y - arrowY + 10.0f};
-        Vector2 revRArrow = {origin.x - 5.0f, origin.y - arrowY + 10.0f};
-        DrawLineEx(extentY, revLArrow, 2.0f, color);
-        DrawLineEx(extentY, revRArrow, 2.0f, color);
+        if(arrows){
+            // Construct Lines
+            Vector2 extentX = {postion.x + arrowX, postion.y};
+            DrawLineEx(postion, extentX, 2.0f, color);
+            Vector2 extentY = {postion.x, postion.y - arrowY};
+            DrawLineEx(postion, extentY, 2.0f, color);
+            
+            // Construct Arrowheads
+            // X-arrowhead
+            Vector2 revUpArrow = {postion.x + arrowX - 10.0f, postion.y + 5.0f};
+            Vector2 revDownArrow = {postion.x + arrowX - 10.0f, postion.y - 5.0f};
+            DrawLineEx(extentX, revUpArrow, 2.0f, color);
+            DrawLineEx(extentX, revDownArrow, 2.0f, color);
+            
+            // Y-arrowHead
+            Vector2 revLArrow = {postion.x + 5.0f, postion.y - arrowY + 10.0f};
+            Vector2 revRArrow = {postion.x - 5.0f, postion.y - arrowY + 10.0f};
+            DrawLineEx(extentY, revLArrow, 2.0f, color);
+            DrawLineEx(extentY, revRArrow, 2.0f, color);
+        }
     }
-}
+};
 
 
 class Sinewave{
@@ -123,6 +126,8 @@ int main(void)
 
     Vector2 gridStart = {50, 50};
     
+    Vector2 originPos = {50, 50};
+    
     float gridWidth = 300.0f;
     float gridHeight = 320.0f;
     
@@ -141,9 +146,9 @@ int main(void)
         Grid grid;
         grid.draw(gridStart, gridWidth, gridHeight, hLines, vLines, 1.0f, LIGHTGRAY);
         
-        Vector2 origin = {gridStart.x, gridStart.y + gridHeight};
-        
-        draw_origin(origin, true, gridWidth / 2.0f, gridHeight  / 2.0f, WHITE);
+        Origin origin;
+        Vector2 position = {originPos.x, originPos.y + gridHeight};
+        origin.draw(position, true, gridWidth / 2.0f, gridHeight  / 2.0f, WHITE);
         
         Vector2 sineStart = {400, 200};
         Sinewave sinewave;
@@ -153,7 +158,6 @@ int main(void)
         DrawText(std::to_string(sinewave.get_amplitude()).c_str(), 650, 140, 25, WHITE);
         
         EndDrawing();
-        
     }
 
     CloseWindow();
