@@ -100,11 +100,11 @@ public:
     float get_amplitude(){return amplitude;}
     
     void draw(Vector2 startPoint,
-        float width,
-        float offset,
-        float amp,
-        float xPos,
-        float freq){
+              float width,
+              float offset,
+              float amp,
+              float xPos,
+              float freq){
         
         amplitude = amp;
         freqency = freq;
