@@ -123,6 +123,8 @@ class Square{
     float width;
     float height;
     Vector2 positon;
+    float lineWidth;
+    Color color;
     std::vector<std::pair<float, float>> coordiantes;
 public:
     void set_width(float w){
@@ -131,10 +133,38 @@ public:
     void set_height(float h){
         height = h;
     }
+    void set_coordinates(std::vector<std::pair<float, float>> coords){
+        coordiantes = coords;
+        for(int i = 0; i < coordiantes.size(); i++){
+            draw({coordiantes[i].first, coordiantes[i].second});
+        }
+    }
     float get_width(){return width;}
     float get_height(){return height;}
     Vector2 get_position(){return positon;}
     std::vector<std::pair<float, float>> get_coordiantes(){return coordiantes;}
+    
+    void draw(Vector2 position){
+        for(int i = 0; i < width; i++){
+            coordiantes.push_back(std::make_pair(i + position.x, position.y));
+            DrawCircleV({i + position.x, position.y}, lineWidth, color);
+        }
+        // Bottom
+        for(int i = 0; i < width; i++){
+            coordiantes.push_back(std::make_pair(i + position.x, position.y + height));
+            DrawCircleV({i + position.x, position.y + height}, lineWidth, color);
+        }
+        // Left
+        for(int i = 0; i < height; i++){
+            coordiantes.push_back(std::make_pair(position.x, i + position.y));
+            DrawCircleV({position.x, i + position.y}, lineWidth, color);
+        }
+        // Right
+        for(int i = 0; i < height; i++){
+            coordiantes.push_back(std::make_pair(position.x + width, i + position.y));
+            DrawCircleV({position.x + width, i + position.y}, lineWidth, color);
+        }
+    }
     
     void draw(Vector2 position, float height, float width, float lineWidth, Color color){
         // Top
@@ -176,6 +206,9 @@ public:
     void set_resolution(float res){
         resolution = res;
     }
+    void set_coordinates(std::vector<std::pair<float, float>> coords){
+        coordinates = coords;
+    }
     float get_radius(){return radius;}
     float get_resolution(){return resolution;}
     Vector2 get_position(){return position;}
@@ -194,12 +227,24 @@ public:
 
 
 class Morph{
-    float x, y;
 public:
-    void update(float x, float y, float lineWidth, Color color){
-        DrawCircleV({x, y}, 2.0f, YELLOW);
+    std::vector<std::pair<float, float>> update(std::vector<std::pair<float, float>> obj1,
+                std::vector<std::pair<float, float>> obj2,
+                int currentStep, int totalSteps, float resolution,
+                float lineWidth, Color color){
+        std::vector<std::pair<float, float>> coordinates;
+        for(int i = 0; i < resolution; i++){
+            float obj1X = obj1[i].first;
+            float obj1Y = obj1[i].second;
+            float obj2X = obj2[i].first;
+            float obj2Y = obj2[i].second;
+            float morphX = obj2X + (obj1X - obj2X) * currentStep / totalSteps;
+            float morphY = obj2Y + (obj1Y - obj2Y) * currentStep / totalSteps;
+            DrawCircleV({morphX, morphY}, lineWidth, color);
+            coordinates.push_back(std::make_pair(morphX, morphY));
+        }
+        return coordinates;
     }
-    
 };
 
 
@@ -225,7 +270,9 @@ int main(void)
     float freq = 2.0f;
     
     float radius = 100.0f;
-    float steps = 0;
+    float step = 0;
+    
+    std::vector<std::pair<float, float>> newPos;
     
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
@@ -261,7 +308,6 @@ int main(void)
             radius = 100.0f;
         }
         
-        
         Square square;
         square.draw({500.0f, 200.0f}, 75.0f, 75.0f, 2.0f, BLUE);
         
@@ -270,22 +316,17 @@ int main(void)
         
         Morph morph;
         
+        
+        // Need to update the position of points without creating a vector and itterating too many times
         if(IsKeyDown(KEY_RIGHT)){
-            for(int i = 0; i < circle.get_resolution(); i++){
-                float sqrX = sqrCoordiantes[i].first;
-                float sqrY = sqrCoordiantes[i].second;
-                float circX = circCoordiantes[i].first;
-                float circY = circCoordiantes[i].second;
-                float dotx = circX + (sqrX - circX) * steps/100;
-                float doty = circY + (sqrY - circY) * steps/100;
-                morph.update(dotx, doty, 2.0f, YELLOW);
-            }
+            newPos = morph.update(sqrCoordiantes, circCoordiantes, step, 100, 300.0f, 2.0f, BLUE);
+            square.set_coordinates(newPos);
         }
         
-        if(steps < 100.0f){
-            steps+= 0.5f;
+        if(step < 100.0f){
+            step+= 0.5f;
         }
-        else{steps = 0;}
+        else{step = 0;}
         
         
         EndDrawing();
