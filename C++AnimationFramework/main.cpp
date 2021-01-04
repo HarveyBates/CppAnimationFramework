@@ -119,15 +119,44 @@ public:
 };
 
 
-class Triangle{
-    float base;
+class Square{
+    float width;
     float height;
+    Vector2 positon;
+    std::vector<std::pair<float, float>> coordiantes;
 public:
+    void set_width(float w){
+        width = w;
+    }
+    void set_height(float h){
+        height = h;
+    }
+    float get_width(){return width;}
     float get_height(){return height;}
-    float get_base(){return base;}
+    Vector2 get_position(){return positon;}
+    std::vector<std::pair<float, float>> get_coordiantes(){return coordiantes;}
     
-    void draw(Vector2 v1, Vector2 v2, Vector2 v3, Color color){
-        DrawTriangleLines(v1, v2, v3, color);
+    void draw(Vector2 position, float height, float width, float lineWidth, Color color){
+        // Top
+        for(int i = 0; i < width; i++){
+            coordiantes.push_back(std::make_pair(i + position.x, position.y));
+            DrawCircleV({i + position.x, position.y}, lineWidth, color);
+        }
+        // Bottom
+        for(int i = 0; i < width; i++){
+            coordiantes.push_back(std::make_pair(i + position.x, position.y + height));
+            DrawCircleV({i + position.x, position.y + height}, lineWidth, color);
+        }
+        // Left
+        for(int i = 0; i < height; i++){
+            coordiantes.push_back(std::make_pair(position.x, i + position.y));
+            DrawCircleV({position.x, i + position.y}, lineWidth, color);
+        }
+        // Right
+        for(int i = 0; i < height; i++){
+            coordiantes.push_back(std::make_pair(position.x + width, i + position.y));
+            DrawCircleV({position.x + width, i + position.y}, lineWidth, color);
+        }
     }
 };
 
@@ -136,6 +165,7 @@ public:
 class Circle{
     float radius, resolution = 300.0f;
     Vector2 position;
+    std::vector<std::pair<float, float>> coordinates;
 public:
     void set_radius(float r){
         radius = r;
@@ -149,15 +179,27 @@ public:
     float get_radius(){return radius;}
     float get_resolution(){return resolution;}
     Vector2 get_position(){return position;}
+    std::vector<std::pair<float, float>> get_coordinates(){return coordinates;}
     
     void draw(Vector2 position, float radius, float resolution, float lineWidth, Color color){
         for(int angle = 0; angle < resolution; angle++){
             float theta = 2.0f * PI * float(angle) / resolution;
             float x = radius * cosf(theta);
             float y = radius * sinf(theta);
+            coordinates.push_back(std::make_pair(x + position.x, y + position.y));
             DrawCircleV({x + position.x, y + position.y}, lineWidth, color);
         }
     }
+};
+
+
+class Morph{
+    float x, y;
+public:
+    void update(float x, float y, float lineWidth, Color color){
+        DrawCircleV({x, y}, 2.0f, YELLOW);
+    }
+    
 };
 
 
@@ -166,7 +208,8 @@ int main(void)
 {
     InitWindow(screenWidth, screenHeight, "Window");
 
-    SetTargetFPS(60);
+    int frameRate = 30;
+    SetTargetFPS(frameRate);
 
     Vector2 gridStart = {50, 50};
     
@@ -180,6 +223,9 @@ int main(void)
     
     float xPos = 10.0f;
     float freq = 2.0f;
+    
+    float radius = 100.0f;
+    float steps = 0;
     
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
@@ -202,10 +248,45 @@ int main(void)
         DrawText(std::to_string(sinewave.get_amplitude()).c_str(), 650, 140, 25, WHITE);
         
         Circle circle;
-        float radius = 100.0f;
+
         Vector2 circPos = {500.0f, 300.0f};
         float resolution = 300.0f;
         circle.draw(circPos, radius, resolution, 2.0f, WHITE);
+        
+        if(IsKeyDown(KEY_LEFT)){
+            radius = 120.0f;
+            circle.set_radius(radius);
+        }
+        else{
+            radius = 100.0f;
+        }
+        
+        
+        Square square;
+        square.draw({500.0f, 200.0f}, 75.0f, 75.0f, 2.0f, BLUE);
+        
+        std::vector<std::pair<float, float>> sqrCoordiantes = square.get_coordiantes();
+        std::vector<std::pair<float, float>> circCoordiantes = circle.get_coordinates();
+        
+        Morph morph;
+        
+        if(IsKeyDown(KEY_RIGHT)){
+            for(int i = 0; i < circle.get_resolution(); i++){
+                float sqrX = sqrCoordiantes[i].first;
+                float sqrY = sqrCoordiantes[i].second;
+                float circX = circCoordiantes[i].first;
+                float circY = circCoordiantes[i].second;
+                float dotx = circX + (sqrX - circX) * steps/100;
+                float doty = circY + (sqrY - circY) * steps/100;
+                morph.update(dotx, doty, 2.0f, YELLOW);
+            }
+        }
+        
+        if(steps < 100.0f){
+            steps+= 0.5f;
+        }
+        else{steps = 0;}
+        
         
         EndDrawing();
     }
