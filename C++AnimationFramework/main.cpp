@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include <iostream>
+#include <vector>
 #include <math.h>
 
 const int screenWidth = 800;
@@ -118,6 +119,49 @@ public:
 };
 
 
+class Triangle{
+    float base;
+    float height;
+public:
+    float get_height(){return height;}
+    float get_base(){return base;}
+    
+    void draw(Vector2 v1, Vector2 v2, Vector2 v3, Color color){
+        DrawTriangleLines(v1, v2, v3, color);
+    }
+};
+
+
+
+class Circle{
+    float radius, resolution = 300.0f;
+    Vector2 position;
+public:
+    void set_radius(float r){
+        radius = r;
+    }
+    void set_position(Vector2 pos){
+        position = pos;
+    }
+    void set_resolution(float res){
+        resolution = res;
+    }
+    float get_radius(){return radius;}
+    float get_resolution(){return resolution;}
+    Vector2 get_position(){return position;}
+    
+    void draw(Vector2 position, float radius, float resolution, float lineWidth, Color color){
+        for(int angle = 0; angle < resolution; angle++){
+            float theta = 2.0f * PI * float(angle) / resolution;
+            float x = radius * cosf(theta);
+            float y = radius * sinf(theta);
+            DrawCircleV({x + position.x, y + position.y}, lineWidth, color);
+        }
+    }
+};
+
+
+
 int main(void)
 {
     InitWindow(screenWidth, screenHeight, "Window");
@@ -148,14 +192,20 @@ int main(void)
         
         Origin origin;
         Vector2 position = {originPos.x, originPos.y + gridHeight};
-        origin.draw(position, true, gridWidth / 2.0f, gridHeight  / 2.0f, WHITE);
+        origin.draw(position, true, gridWidth / 2.0f, gridHeight  / 2.0f, BLUE);
         
-        Vector2 sineStart = {400, 200};
+        Vector2 sineStart = {50, 50};
         Sinewave sinewave;
-        sinewave.draw(sineStart, 200.0f, 100.0f, 50.0f, xPos, freq);
+        sinewave.draw(sineStart, 300.0f, 100.0f, 50.0f, xPos, freq);
         xPos += 0.01f;
         DrawText(std::to_string(sinewave.get_frequency()).c_str(), 650, 100, 25, WHITE);
         DrawText(std::to_string(sinewave.get_amplitude()).c_str(), 650, 140, 25, WHITE);
+        
+        Circle circle;
+        float radius = 100.0f;
+        Vector2 circPos = {500.0f, 300.0f};
+        float resolution = 300.0f;
+        circle.draw(circPos, radius, resolution, 2.0f, WHITE);
         
         EndDrawing();
     }
