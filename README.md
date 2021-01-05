@@ -1,6 +1,10 @@
 # CppAnimationFramework
 A C++ animation framework to create visualisations of data and mathematical functions for use in videos and as a standalone interactive framework. 
 
+<video width= "785" height="441" controls autoplay loop>
+  <source src="VideoExamples/Example.mov" type="video/mp4">
+</video>
+
 ## About
 
 This framework is build upon [raylib](https://www.raylib.com/index.html) a cross platform videogaming library which supports a number of languages through various bindings. The current system uses Apples [Metal](https://developer.apple.com/metal/) to access the GPU; however, [OpenGL](https://www.opengl.org/) could also be implemented in its place on other operating systems.

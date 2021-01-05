@@ -10,6 +10,7 @@
 		2233CCE925A1631C0032F116 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2233CCE825A1631C0032F116 /* main.cpp */; };
 		2233CCF225A1632D0032F116 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2233CCF125A1632D0032F116 /* Metal.framework */; };
 		2233CCF425A1635E0032F116 /* libraylib.3.5.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2233CCF325A1635E0032F116 /* libraylib.3.5.0.dylib */; };
+		2233CCF725A41EDE0032F116 /* shapes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2233CCF625A41EDE0032F116 /* shapes.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,6 +30,8 @@
 		2233CCE825A1631C0032F116 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		2233CCF125A1632D0032F116 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		2233CCF325A1635E0032F116 /* libraylib.3.5.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libraylib.3.5.0.dylib; path = ../../../../usr/local/Cellar/raylib/3.5.0/lib/libraylib.3.5.0.dylib; sourceTree = "<group>"; };
+		2233CCF625A41EDE0032F116 /* shapes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shapes.cpp; sourceTree = "<group>"; };
+		2233CCF925A41EFB0032F116 /* shapes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shapes.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +68,8 @@
 			isa = PBXGroup;
 			children = (
 				2233CCE825A1631C0032F116 /* main.cpp */,
+				2233CCF625A41EDE0032F116 /* shapes.cpp */,
+				2233CCF925A41EFB0032F116 /* shapes.h */,
 			);
 			path = "C++AnimationFramework";
 			sourceTree = "<group>";
@@ -135,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2233CCE925A1631C0032F116 /* main.cpp in Sources */,
+				2233CCF725A41EDE0032F116 /* shapes.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

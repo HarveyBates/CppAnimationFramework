@@ -105,7 +105,8 @@ public:
               float offset,
               float amp,
               float xPos,
-              float freq){
+              float freq,
+              Color color){
         
         amplitude = amp;
         freqency = freq;
@@ -113,7 +114,7 @@ public:
         for(float x = startPoint.x; x < startPoint.x + width; ++x){
             float y = amp * sin((x * (PI/180)) * freq + xPos) + offset;
             Vector2 point = {x, y};
-            DrawCircleV(point, 2.0f, RED);
+            DrawCircleV(point, 4.0f, color);
         }
     }
 };
@@ -135,9 +136,6 @@ public:
     }
     void set_coordinates(std::vector<std::pair<float, float>> coords){
         coordiantes = coords;
-        for(int i = 0; i < coordiantes.size(); i++){
-            draw({coordiantes[i].first, coordiantes[i].second});
-        }
     }
     float get_width(){return width;}
     float get_height(){return height;}
@@ -193,7 +191,9 @@ public:
 
 
 class Circle{
-    float radius, resolution = 300.0f;
+    float radius, resolution = 600.0f;
+    float lineWidth = 2.0f;
+    Color color = WHITE;
     Vector2 position;
     std::vector<std::pair<float, float>> coordinates;
 public:
@@ -214,14 +214,27 @@ public:
     Vector2 get_position(){return position;}
     std::vector<std::pair<float, float>> get_coordinates(){return coordinates;}
     
-    void draw(Vector2 position, float radius, float resolution, float lineWidth, Color color){
-        for(int angle = 0; angle < resolution; angle++){
-            float theta = 2.0f * PI * float(angle) / resolution;
-            float x = radius * cosf(theta);
-            float y = radius * sinf(theta);
-            coordinates.push_back(std::make_pair(x + position.x, y + position.y));
-            DrawCircleV({x + position.x, y + position.y}, lineWidth, color);
+    void draw(Vector2 position,
+              float radius,
+              float resolution,
+              float lineWidth,
+              Color color){
+            for(int angle = 0; angle < resolution; angle++){
+                float theta = 2.0f * PI * float(angle) / resolution;
+                float x = radius * cosf(theta);
+                float y = radius * sinf(theta);
+                coordinates.push_back(std::make_pair(x + position.x, y + position.y));
+                DrawCircleV({x + position.x, y + position.y}, lineWidth, color);
+            }
+            set_coordinates(coordinates);
+    }
+    
+    void update(std::vector<std::pair<float, float>> prevCoordinates, std::vector<std::pair<float, float>> coordinates){
+        for(int i = 0; i < coordinates.size(); i++){
+            DrawCircleV({prevCoordinates[i].first, prevCoordinates[i].second}, lineWidth, BLACK);
+            DrawCircleV({coordinates[i].first, coordinates[i].second}, lineWidth, color);
         }
+        prevCoordinates = coordinates;
     }
 };
 
@@ -229,9 +242,10 @@ public:
 class Morph{
 public:
     std::vector<std::pair<float, float>> update(std::vector<std::pair<float, float>> obj1,
-                std::vector<std::pair<float, float>> obj2,
-                int currentStep, int totalSteps, float resolution,
-                float lineWidth, Color color){
+                                                std::vector<std::pair<float, float>> obj2,
+                                                int currentStep, int totalSteps,
+                                                float resolution, float lineWidth,
+                                                Color color){
         std::vector<std::pair<float, float>> coordinates;
         for(int i = 0; i < resolution; i++){
             float obj1X = obj1[i].first;
@@ -240,7 +254,6 @@ public:
             float obj2Y = obj2[i].second;
             float morphX = obj2X + (obj1X - obj2X) * currentStep / totalSteps;
             float morphY = obj2Y + (obj1Y - obj2Y) * currentStep / totalSteps;
-            DrawCircleV({morphX, morphY}, lineWidth, color);
             coordinates.push_back(std::make_pair(morphX, morphY));
         }
         return coordinates;
@@ -253,7 +266,7 @@ int main(void)
 {
     InitWindow(screenWidth, screenHeight, "Window");
 
-    int frameRate = 30;
+    int frameRate = 60;
     SetTargetFPS(frameRate);
 
     Vector2 gridStart = {50, 50};
@@ -269,12 +282,17 @@ int main(void)
     float xPos = 10.0f;
     float freq = 2.0f;
     
-    float radius = 100.0f;
+    float radius = 180.0f;
     float step = 0;
+    
+    Vector2 circPos = {575.0f, screenHeight / 2};
+    float resolution = 600.0f;
     
     std::vector<std::pair<float, float>> newPos;
     
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    int numFrames = 0;
+    
+    while (!WindowShouldClose() && numFrames < 10000)    // Detect window close button or ESC key
     {
         BeginDrawing();
         
@@ -285,51 +303,45 @@ int main(void)
         
         Origin origin;
         Vector2 position = {originPos.x, originPos.y + gridHeight};
-        origin.draw(position, true, gridWidth / 2.0f, gridHeight  / 2.0f, BLUE);
+        origin.draw(position, true, gridWidth / 2.0f, gridHeight  / 2.0f, WHITE);
         
         Vector2 sineStart = {50, 50};
         Sinewave sinewave;
-        sinewave.draw(sineStart, 300.0f, 100.0f, 50.0f, xPos, freq);
-        xPos += 0.01f;
-        DrawText(std::to_string(sinewave.get_frequency()).c_str(), 650, 100, 25, WHITE);
-        DrawText(std::to_string(sinewave.get_amplitude()).c_str(), 650, 140, 25, WHITE);
+        sinewave.draw(sineStart, 300.0f, 200.0f, 100.0f, xPos, freq, YELLOW);
+        Sinewave sinewave1;
+        sinewave1.draw(sineStart, 300.0f, 200.0f, 100.0f, xPos + 10.0f, freq, BLUE);
+        
+        xPos += 0.05f;
+//        DrawText(std::to_string(sinewave.get_frequency()).c_str(), 100, 400, 25, WHITE);
+//        DrawText(std::to_string(sinewave.get_frequency()).c_str(), 100, 400, 25, WHITE);
+        DrawText("x", 300/2 + 45, 375, 25, WHITE);
+        DrawText("y", 25, gridHeight / 2 + 40, 25, WHITE);
         
         Circle circle;
-
-        Vector2 circPos = {500.0f, 300.0f};
-        float resolution = 300.0f;
-        circle.draw(circPos, radius, resolution, 2.0f, WHITE);
-        
-        if(IsKeyDown(KEY_LEFT)){
-            radius = 120.0f;
-            circle.set_radius(radius);
-        }
-        else{
-            radius = 100.0f;
-        }
+        circle.draw(circPos, radius, resolution, 2.0f, BLACK);
         
         Square square;
-        square.draw({500.0f, 200.0f}, 75.0f, 75.0f, 2.0f, BLUE);
+        square.draw({500.0f, screenHeight/3}, 150.0f, 150.0f, 2.0f, BLUE);
         
-        std::vector<std::pair<float, float>> sqrCoordiantes = square.get_coordiantes();
-        std::vector<std::pair<float, float>> circCoordiantes = circle.get_coordinates();
-        
-        Morph morph;
-        
-        
-        // Need to update the position of points without creating a vector and itterating too many times
-        if(IsKeyDown(KEY_RIGHT)){
-            newPos = morph.update(sqrCoordiantes, circCoordiantes, step, 100, 300.0f, 2.0f, BLUE);
-            square.set_coordinates(newPos);
+        if(numFrames > 800){
+            std::vector<std::pair<float, float>> sqrCoordiantes = square.get_coordiantes();
+            std::vector<std::pair<float, float>> circCoordiantes = circle.get_coordinates();
+            
+            Morph morph;
+            newPos = morph.update(circCoordiantes, sqrCoordiantes, step, 100, 600.0f, 2.0f, BLUE);
+            circle.update(circCoordiantes, newPos);
+            
+            if(step < 100.0f){
+                step+= 1.0f;
+            }
+            else{
+                step = 100.0f;
+            }
         }
-        
-        if(step < 100.0f){
-            step+= 0.5f;
-        }
-        else{step = 0;}
-        
         
         EndDrawing();
+        
+        numFrames++;
     }
 
     CloseWindow();
