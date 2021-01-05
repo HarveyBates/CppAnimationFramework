@@ -1,9 +1,7 @@
 # CppAnimationFramework
 A C++ animation framework to create visualisations of data and mathematical functions for use in videos and as a standalone interactive framework. 
 
-<video width= "785" height="441" controls autoplay loop>
-  <source src="VideoExamples/Example.mov" type="video/mp4">
-</video>
+![Example](/Users/harveybates/Documents/C++AnimationFramework/VideoExamples/Example.gif)
 
 ## About
 
