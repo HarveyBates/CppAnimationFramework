@@ -1,7 +1,7 @@
 # CppAnimationFramework
 A C++ animation framework to create visualisations of data and mathematical functions for use in videos and as a standalone interactive framework. 
 
-![Example](/Users/harveybates/Documents/C++AnimationFramework/VideoExamples/Example.gif)
+![Example](VideoExamples/Example.gif)
 
 ## About
 
