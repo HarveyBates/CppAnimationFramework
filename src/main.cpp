@@ -11,12 +11,9 @@ int main(void)
     SetTargetFPS(frameRate);
 
     Vector2 gridStart = {50, 50};
-    
     Vector2 originPos = {50, 50};
-    
     float gridWidth = 300.0f;
     float gridHeight = 320.0f;
-    
     float hLines = 10.0f;
     float vLines = 10.0f;
     
