@@ -6,25 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/Users/harveybates/Documents/C++AnimationFramework/src/graph.cpp
-graph.hpp
-/Users/harveybates/Documents/C++AnimationFramework/src/graph.hpp
-
 /Users/harveybates/Documents/C++AnimationFramework/src/main.cpp
 main.h
 /Users/harveybates/Documents/C++AnimationFramework/src/main.h
-
-/Users/harveybates/Documents/C++AnimationFramework/src/shapes.cpp
-shapes.h
-/Users/harveybates/Documents/C++AnimationFramework/src/shapes.h
-
-/Users/harveybates/Documents/C++AnimationFramework/src/transform.cpp
-transform.hpp
-/Users/harveybates/Documents/C++AnimationFramework/src/transform.hpp
-
-/Users/harveybates/Documents/C++AnimationFramework/src/waves.cpp
-waves.hpp
-/Users/harveybates/Documents/C++AnimationFramework/src/waves.hpp
+stdlib.h
+/Users/harveybates/Documents/C++AnimationFramework/src/stdlib.h
 
 /usr/local/Cellar/raylib/3.5.0/include/raylib.h
 stdarg.h

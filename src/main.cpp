@@ -1,85 +1,127 @@
 #include "main.h"
+#include "stdlib.h"
 
 const int screenWidth = 800;
 const int screenHeight = 450;
+
+class Boid{
+	Vector2 position, velocity, acceleration;
+	float radius = 5.0f;
+	const int perceptionRadius = 50;
+public:
+	Boid(){
+		int randomx = rand() % screenWidth;
+		int randomy = rand() % screenHeight;
+		int randXv = rand() % 4;
+		position = {(float)randomx, (float)randomy};  
+		velocity = {3.0f, float(randXv)};
+		acceleration = {0.0, 0.0};
+	}
+
+	void show(){
+		DrawCircleV(position, radius, WHITE); 		
+	}
+
+	void edge_wrap(){
+		if(this->position.x > screenWidth){
+			this->position.x = 0;
+		}
+		else if(this->position.x < 0){
+			this->position.x = screenWidth;
+		}
+		else if(this->position.y > screenHeight){
+			this->position.y = 0;
+		}
+		else if(this->position.y < 0){
+			this->position.y =screenHeight;
+		}
+	}
+
+	Vector2 align(std::vector<Boid> boids){
+		int sum = 0;
+		Vector2 steering; 
+		for(int i = 0; i < boids.size(); i++){
+			int distance = std::abs(this->position.x - boids[i].position.x) + 
+				std::abs(this->position.y - boids[i].position.y);
+			if(distance != 0 && distance < perceptionRadius){
+					steering.x += boids[i].velocity.x;
+					steering.y += boids[i].velocity.y;
+					sum++;
+			}
+		}
+		if(sum > 0){
+			steering.x = (steering.x / sum) - this->velocity.x;
+			steering.y = (steering.y / sum) - this->velocity.y;
+		}
+		return steering;
+	}
+
+	Vector2 cohesion(std::vector<Boid> boids){
+		int sum = 0;
+		Vector2 steering;
+		for(int i = 0; i < boids.size(); i++){
+			int distance = std::abs(this->position.x - boids[i].position.x) + 
+				std::abs(this->position.y - boids[i].position.y);
+			if(distance != 0 && distance < perceptionRadius){
+				steering.x += boids[i].position.x;
+				steering.y += boids[i].position.y;
+				sum++;
+			}
+		}
+		if(sum > 0){
+			steering.x = (steering.x / sum) - this->position.x - this->velocity.x;
+			steering.y = (steering.y / sum) - this->position.y - this->velocity.y;
+		}
+		return steering;
+	}
+
+	void flock(std::vector<Boid> boids){
+		acceleration = {0.0f, 0.0f};
+		Vector2 boidAlignment = align(boids);
+		// Vector2 boidCohesion = cohesion(boids);
+		acceleration = {boidAlignment.x, boidAlignment.y};
+		//acceleration = {boidAlignment.x + boidCohesion.x, 
+		//				boidAlignment.y + boidCohesion.y};
+	}
+
+	void update(){
+		position.x += velocity.x;
+		position.y += velocity.y;
+
+		velocity.x += acceleration.x;
+		velocity.y += acceleration.y;
+	}
+};
+
+std::vector<Boid> flock;
+
 
 int main(void)
 {
     InitWindow(screenWidth, screenHeight, "Window");
 
-    int frameRate = 60;
+    const int frameRate = 60;
     SetTargetFPS(frameRate);
+	const int numBoids = 100;
 
-    Vector2 gridStart = {50, 50};
-    Vector2 originPos = {50, 50};
-    float gridWidth = 300.0f;
-    float gridHeight = 320.0f;
-    float hLines = 10.0f;
-    float vLines = 10.0f;
-    
-    float xPos = 10.0f;
-    float freq = 2.0f;
-    
-    float radius = 180.0f;
-    float step = 0;
-    
-    Vector2 circPos = {575.0f, screenHeight / 2};
-    float resolution = 600.0f;
-    
-    std::vector<std::pair<float, float>> newPos;
-    
-    int numFrames = 0;
-    
-    while (!WindowShouldClose() && numFrames < 10000)    // Detect window close button or ESC key
+
+	for(int i = 0; i < numBoids; i++){
+		flock.push_back(Boid());
+	}
+
+    while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         BeginDrawing();
-        
         ClearBackground(BLACK);
-        
-        Grid grid;
-        grid.draw(gridStart, gridWidth, gridHeight, hLines, vLines, 1.0f, LIGHTGRAY);
-        
-        Origin origin;
-        Vector2 position = {originPos.x, originPos.y + gridHeight};
-        origin.draw(position, true, gridWidth / 2.0f, gridHeight  / 2.0f, WHITE);
-        
-        Vector2 sineStart = {50, 50};
-        Sinewave sinewave;
-        sinewave.draw(sineStart, 300.0f, 200.0f, 100.0f, xPos, freq, YELLOW);
-        Sinewave sinewave1;
-        sinewave1.draw(sineStart, 300.0f, 200.0f, 100.0f, xPos + 10.0f, freq, BLUE);
-        
-        xPos += 0.05f;
-//        DrawText(std::to_string(sinewave.get_frequency()).c_str(), 100, 400, 25, WHITE);
-//        DrawText(std::to_string(sinewave.get_frequency()).c_str(), 100, 400, 25, WHITE);
-        DrawText("x", 300/2 + 45, 375, 25, WHITE);
-        DrawText("y", 25, gridHeight / 2 + 40, 25, WHITE);
-        
-        Circle circle;
-        circle.draw(circPos, radius, resolution, 2.0f, BLACK);
-        
-        Square square;
-        square.draw({500.0f, screenHeight/3}, 150.0f, 150.0f, 2.0f, BLUE);
-        
-        if(numFrames > 800){
-            std::vector<std::pair<float, float>> sqrCoordiantes = square.get_coordiantes();
-            std::vector<std::pair<float, float>> circCoordiantes = circle.get_coordinates();
-            
-            Morph morph;
-            newPos = morph.update(circCoordiantes, sqrCoordiantes, step, 100, 600.0f, 2.0f, BLUE);
-            circle.update(circCoordiantes, newPos);
-            
-            if(step < 100.0f){
-                step+= 1.0f;
-            }
-            else{
-                step = 100.0f;
-            }
-        }
-        
+
+		for(int i = 0; i < flock.size(); i++){
+			flock[i].edge_wrap();
+			flock[i].flock(flock);
+			flock[i].show();
+       		flock[i].update(); 
+		}
+       
         EndDrawing();
-        
-        numFrames++;
     }
 
     CloseWindow();
