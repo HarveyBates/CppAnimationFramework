@@ -1,5 +1,6 @@
 #include "main.h"
 #include "stdlib.h"
+#include <math.h>
 
 const int screenWidth = 800;
 const int screenHeight = 450;
@@ -12,9 +13,9 @@ public:
 	Boid(){
 		int randomx = rand() % screenWidth;
 		int randomy = rand() % screenHeight;
-		int randXv = rand() % 4;
+		int randXv = (rand() % 4) - 2;
 		position = {(float)randomx, (float)randomy};  
-		velocity = {0.1f, float(randXv)};
+		velocity = {float(randXv), float(randXv)};
 		acceleration = {0.0f, 0.0f};
 	}
 
@@ -37,7 +38,7 @@ public:
 		}
 	}
 
-	void align(std::vector<Boid> boids){
+	Vector2 align(std::vector<Boid> boids){
 		int sum = 0;
 		Vector2 steering; 
 		for(int i = 0; i < boids.size(); i++){
@@ -53,8 +54,7 @@ public:
 			steering.x = (steering.x / sum) - this->velocity.x;
 			steering.y = (steering.y / sum) - this->velocity.y;
 		}
-		this->acceleration.x = steering.x;
-		this->acceleration.y = steering.y;
+		return steering;
 	}
 
 	Vector2 cohesion(std::vector<Boid> boids){
@@ -73,21 +73,29 @@ public:
 			steering.x = (steering.x / sum) - this->position.x - this->velocity.x;
 			steering.y = (steering.y / sum) - this->position.y - this->velocity.y;
 		}
-		return steering;	
+		return steering;
 	}
 
-	//void flock(std::vector<Boid> boids){
-	//	Vector2 alignment = align(boids);
-	//	acceleration.x = alignment.x;
-	//	acceleration.y = alignment.y;
-	//}
+	void flock(std::vector<Boid> boids){
+		Vector2 ali = align(boids);
+		Vector2 coh = cohesion(boids);
+		apply(ali);
+		apply(coh);
+	}
+
+	void apply(Vector2 force){
+		acceleration.x += force.x;
+		acceleration.y += force.y;
+	}
 
 	void update(){
+		velocity.x += acceleration.x; 
+		velocity.y += acceleration.y;
+
 		position.x += velocity.x;
 		position.y += velocity.y;
 
-		velocity.x += acceleration.x;
-		velocity.y += acceleration.y;
+		acceleration = {0.0f, 0.0f};
 	}
 };
 
@@ -114,7 +122,7 @@ int main(void)
 
 		for(int i = 0; i < flock.size(); i++){
 			flock[i].edge_wrap();
-			flock[i].align(flock);
+			flock[i].flock(flock);
 			flock[i].show();
        		flock[i].update(); 
 		}

@@ -11,6 +11,8 @@ main.h
 /Users/harveybates/Documents/C++AnimationFramework/src/main.h
 stdlib.h
 /Users/harveybates/Documents/C++AnimationFramework/src/stdlib.h
+math.h
+-
 
 /usr/local/Cellar/raylib/3.5.0/include/raylib.h
 stdarg.h
