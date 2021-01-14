@@ -142,6 +142,33 @@ AnimationFramework/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/AnimationFramework.dir/build.make CMakeFiles/AnimationFramework.dir/build
 .PHONY : AnimationFramework/fast
 
+src/boids.o: src/boids.cpp.o
+
+.PHONY : src/boids.o
+
+# target to build an object file
+src/boids.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AnimationFramework.dir/build.make CMakeFiles/AnimationFramework.dir/src/boids.cpp.o
+.PHONY : src/boids.cpp.o
+
+src/boids.i: src/boids.cpp.i
+
+.PHONY : src/boids.i
+
+# target to preprocess a source file
+src/boids.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AnimationFramework.dir/build.make CMakeFiles/AnimationFramework.dir/src/boids.cpp.i
+.PHONY : src/boids.cpp.i
+
+src/boids.s: src/boids.cpp.s
+
+.PHONY : src/boids.s
+
+# target to generate assembly for a file
+src/boids.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AnimationFramework.dir/build.make CMakeFiles/AnimationFramework.dir/src/boids.cpp.s
+.PHONY : src/boids.cpp.s
+
 src/graph.o: src/graph.cpp.o
 
 .PHONY : src/graph.o
@@ -286,6 +313,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... AnimationFramework"
+	@echo "... src/boids.o"
+	@echo "... src/boids.i"
+	@echo "... src/boids.s"
 	@echo "... src/graph.o"
 	@echo "... src/graph.i"
 	@echo "... src/graph.s"

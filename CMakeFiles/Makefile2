@@ -93,12 +93,12 @@ clean: CMakeFiles/AnimationFramework.dir/clean
 CMakeFiles/AnimationFramework.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/AnimationFramework.dir/build.make CMakeFiles/AnimationFramework.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/AnimationFramework.dir/build.make CMakeFiles/AnimationFramework.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/harveybates/Documents/C++AnimationFramework/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target AnimationFramework"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/harveybates/Documents/C++AnimationFramework/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target AnimationFramework"
 .PHONY : CMakeFiles/AnimationFramework.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/AnimationFramework.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/harveybates/Documents/C++AnimationFramework/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/harveybates/Documents/C++AnimationFramework/CMakeFiles 7
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/AnimationFramework.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/harveybates/Documents/C++AnimationFramework/CMakeFiles 0
 .PHONY : CMakeFiles/AnimationFramework.dir/rule

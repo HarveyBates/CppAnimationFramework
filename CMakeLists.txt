@@ -9,14 +9,16 @@ set(NAME_SRC
 	src/transform.cpp
 	src/graph.cpp
 	src/shapes.cpp
-	src/waves.cpp)
+	src/waves.cpp
+	src/boids.cpp)
 
 set(NAME_HEADERS
 	include/main.h
 	include/transform.hpp
 	include/graph.hpp
 	include/shapes.h
-	include/waves.hpp)
+	include/waves.hpp
+	include/boids.hpp)
 
 set(EXECUTABLE_OUTPUT_PATH 
 	${CMAKE_BINARY_DIR}/bin)

@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/AnimationFramework.dir/src/boids.cpp.o"
   "CMakeFiles/AnimationFramework.dir/src/graph.cpp.o"
   "CMakeFiles/AnimationFramework.dir/src/main.cpp.o"
   "CMakeFiles/AnimationFramework.dir/src/shapes.cpp.o"
