@@ -6,3 +6,6 @@
 #include "graph.hpp"
 #include "waves.hpp"
 #include "transform.hpp"
+
+extern const int screenWidth = 800;
+extern const int screenHeight = 450;

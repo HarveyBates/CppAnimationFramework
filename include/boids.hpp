@@ -1,8 +1,12 @@
 #pragma once
+#include "raylib.h"
 #include <vector>
 #include <iostream>
 #include "stdlib.h"
 #include <math.h>
+
+extern const int screenWidth;
+extern const int screenHeight;
 
 class Boid{
 	Vector2 position, velocity, acceleration;
