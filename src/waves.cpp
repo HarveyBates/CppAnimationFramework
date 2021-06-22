@@ -15,7 +15,7 @@ void Sinewave::draw(Vector2 startPoint, float width, float offset, float amp, fl
     freqency = freq;
     
     for(float x = startPoint.x; x < startPoint.x + width; ++x){
-        float y = amp * sin((x * (PI/180)) * freq + xPos) + offset;
+        float y = amp * sinf((x * (PI/180)) * freq + xPos) + offset;
         Vector2 point = {x, y};
         DrawCircleV(point, 4.0f, color);
     }

@@ -1,6 +1,5 @@
 #include "shapes.h"
 
-
 void Square::set_width(float w){
     width = w;
 }

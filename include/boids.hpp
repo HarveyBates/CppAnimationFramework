@@ -4,6 +4,8 @@
 #include <iostream>
 #include "stdlib.h"
 #include <math.h>
+#include <cstdlib>
+#include <cmath>
 
 extern const int screenWidth;
 extern const int screenHeight;
